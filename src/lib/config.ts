@@ -6,8 +6,8 @@
  *    one entry per day to PHOTOS below, e.g.
  *        '2026-09-26': './photos/2026-09-26.jpg',
  *    (keep paths relative with a leading './' so GitHub Pages project
- *    URLs keep working). Days without an entry show an auto-generated
- *    placeholder image.
+ *    URLs keep working). Days without an entry fall back to
+ *    PHOTO_FALLBACK — currently the shared placeholder image.
  * 2. MINI-GAME SECRETS — replace the placeholder entries in SECRETS with
  *    the real messages, keyed by date ('2026-09-26', '2026-10-03', …).
  * 3. MINI-GAMES THEMSELVES — see src/components/MiniGame.tsx, which has a
@@ -15,8 +15,11 @@
  * ═════════════════════════════════════════════════════════════════════
  */
 
-/** The passcode, compared case-insensitively with spaces/punctuation ignored. */
+/** The visitor passcode, compared case-insensitively, uppercased. */
 export const PASSCODE = 'NOONDAYGUN' // i.e. "NOONDAY GUN"
+
+/** The hidden admin passcode, entered into the same letter grid. */
+export const ADMIN_PASSCODE = '1234567890'
 
 /** Number of letters before the visual gap (NOONDAY | GUN). */
 export const PASSCODE_GAP_AFTER = 7
@@ -39,9 +42,16 @@ export const CALENDAR_MONTHS: ReadonlyArray<readonly [number, number]> = [
   [2026, 9], // October 2026
 ]
 
+/** Shown for every day without a bespoke entry in PHOTOS. */
+export const PHOTO_FALLBACK = './photos/placeholder.jpg'
+
+/** Caption shown beneath the fallback photo in the modal. */
+export const PHOTO_FALLBACK_CAPTION = 'A placeholder photo — the real photograph for this day is on its way.'
+
 /**
- * Daily photos, keyed by ISO date (YYYY-MM-DD).
- * Empty for now — every day falls back to a generated placeholder.
+ * Daily photos, keyed by ISO date (YYYY-MM-DD). Empty for now: every day
+ * falls back to PHOTO_FALLBACK above. Revert the fallback once real entries
+ * exist here.
  */
 export const PHOTOS: Record<string, string> = {
   // '2026-09-26': './photos/2026-09-26.jpg',

@@ -8,11 +8,11 @@ export function About() {
       <div className="about-panel">
         <WaxSeal className="mx-auto size-14" />
 
-        <h1 className="font-display mt-6 text-center text-3xl font-medium text-ivory-100 sm:text-4xl">
+        <h1 className="font-display mt-6 text-center text-3xl font-medium text-ink-100 sm:text-4xl">
           For you, and no one else
         </h1>
 
-        <div className="font-display mt-8 space-y-5 text-lg leading-relaxed text-ivory-300">
+        <div className="font-display mt-8 space-y-5 text-lg leading-relaxed text-ink-500">
           <p>My love,</p>
           <p>
             This little corner of the internet was built for you and you alone.
@@ -26,10 +26,10 @@ export function About() {
             Come back each morning. Something new will always be waiting for you
             here.
           </p>
-          <p className="text-right text-gold-300 italic">— yours, entirely</p>
+          <p className="text-right text-rose-400 italic">— yours, entirely</p>
         </div>
 
-        <div className="mt-10 border-t border-gold-500/15 pt-6 text-center">
+        <div className="mt-10 border-t border-mauve-800/15 pt-6 text-center">
           <button
             type="button"
             onClick={() => {
@@ -41,7 +41,7 @@ export function About() {
               }
               window.location.reload()
             }}
-            className="text-xs text-ivory-600 underline decoration-ivory-600/40 underline-offset-4 transition-colors hover:text-ivory-300"
+            className="text-xs text-ink-600 underline decoration-ink-600/40 underline-offset-4 transition-colors hover:text-ink-500"
           >
             Reset access and mini-game wins (site owner’s testing tool)
           </button>

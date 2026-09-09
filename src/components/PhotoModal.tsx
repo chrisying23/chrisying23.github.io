@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
-import { PHOTOS } from '../lib/config'
-import { placeholderPhoto } from '../lib/placeholder'
+import { PHOTOS, PHOTO_FALLBACK, PHOTO_FALLBACK_CAPTION } from '../lib/config'
 import { prettyDate } from '../lib/time'
 
 type PhotoModalProps = {
@@ -9,12 +8,13 @@ type PhotoModalProps = {
 }
 
 /**
- * Modal that shows one day's photo. Until a real photo is added to PHOTOS
- * in src/lib/config.ts, an auto-generated placeholder card is shown.
+ * Modal that shows one day's photo with a caption underneath. Days without
+ * a bespoke entry in PHOTOS use the shared fallback image and its caption
+ * (see src/lib/config.ts) — currently the placeholder image.
  */
 export function PhotoModal({ dateStr, onClose }: PhotoModalProps) {
-  const src = PHOTOS[dateStr] ?? placeholderPhoto(dateStr)
-  const isPlaceholder = PHOTOS[dateStr] === undefined
+  const bespoke = PHOTOS[dateStr]
+  const src = bespoke ?? PHOTO_FALLBACK
 
   useEffect(() => {
     function handleKey(event: globalThis.KeyboardEvent) {
@@ -39,7 +39,7 @@ export function PhotoModal({ dateStr, onClose }: PhotoModalProps) {
         type="button"
         aria-label="Close"
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-night-950/85 backdrop-blur-sm"
+        className="absolute inset-0 cursor-default bg-mauve-900/40 backdrop-blur-sm"
       />
 
       <figure className="animate-modal-in relative w-full max-w-sm">
@@ -52,21 +52,19 @@ export function PhotoModal({ dateStr, onClose }: PhotoModalProps) {
         </div>
 
         <figcaption className="mt-4 text-center">
-          <span className="font-display block text-xl text-ivory-100 italic">
+          <span className="font-display block text-xl text-ink-100 italic">
             {prettyDate(dateStr)}
           </span>
-          {isPlaceholder && (
-            <span className="mt-1 block text-xs text-ivory-600">
-              a placeholder, until the real photograph arrives
-            </span>
-          )}
+          <span className="mt-1 block text-xs text-ink-500">
+            {bespoke ? 'a photograph kept for this day' : PHOTO_FALLBACK_CAPTION}
+          </span>
         </figcaption>
 
         <button
           type="button"
           onClick={onClose}
           aria-label="Close photo"
-          className="absolute -top-3 -right-3 flex size-9 items-center justify-center rounded-full border border-gold-500/40 bg-night-900 text-ivory-300 transition-colors hover:border-gold-400 hover:text-gold-200"
+          className="absolute -top-3 -right-3 flex size-9 items-center justify-center rounded-full border border-mauve-800/40 bg-mauve-100 text-ink-500 transition-colors hover:border-rose-400 hover:text-rose-600"
         >
           <svg
             viewBox="0 0 24 24"

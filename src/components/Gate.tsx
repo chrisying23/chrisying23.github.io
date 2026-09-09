@@ -1,19 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ClipboardEvent, KeyboardEvent } from 'react'
-import { GATE_HINT, PASSCODE, PASSCODE_GAP_AFTER } from '../lib/config'
+import { ADMIN_PASSCODE, GATE_HINT, PASSCODE, PASSCODE_GAP_AFTER } from '../lib/config'
 import { WaxSeal } from './Icons'
 
 type GateProps = {
+  /** Visitor unlock: show the calendar. */
   onUnlock: () => void
+  /** Admin unlock: show the calendar plus the override banner. */
+  onAdmin: () => void
 }
 
 /**
  * The passcode gate. This is the only thing rendered until the visitor
- * enters the correct phrase — the calendar and About sections are never
+ * enters a correct phrase — the calendar and About sections are never
  * mounted (and therefore cannot be reached by URL or navigation) before
  * that. See src/App.tsx for the guard.
+ *
+ * Two answers fit the grid: the visitor passcode (letters) and the hidden
+ * admin passcode (digits). Once the grid is long enough for the digits to
+ * be possible, both are checked; the admin answer takes precedence.
  */
-export function Gate({ onUnlock }: GateProps) {
+export function Gate({ onUnlock, onAdmin }: GateProps) {
   const [letters, setLetters] = useState<string[]>(() =>
     Array<string>(PASSCODE.length).fill(''),
   )
@@ -25,14 +32,16 @@ export function Gate({ onUnlock }: GateProps) {
     inputsRef.current[0]?.focus()
   }, [])
 
-  // Once every box holds a letter, check the phrase.
+  // Once every box holds a character, check the answers.
   function submitIfComplete(next: string[]) {
     if (next.some((letter) => letter === '')) return
 
-    if (next.join('') === PASSCODE) {
+    const value = next.join('').toUpperCase()
+    if (value === ADMIN_PASSCODE || value === PASSCODE) {
+      const isAdmin = value === ADMIN_PASSCODE
       setStatus('opening')
       // Let the seal-breaking moment play before revealing the site.
-      window.setTimeout(onUnlock, 1150)
+      window.setTimeout(() => (isAdmin ? onAdmin() : onUnlock()), 1150)
       return
     }
 
@@ -46,7 +55,7 @@ export function Gate({ onUnlock }: GateProps) {
 
   function handleChange(index: number, raw: string) {
     if (status !== 'idle') return
-    const ch = raw.replace(/[^a-z]/gi, '').slice(-1).toUpperCase()
+    const ch = raw.replace(/[^a-z0-9]/gi, '').slice(-1).toUpperCase()
     if (!ch) return
     const next = [...letters]
     next[index] = ch
@@ -80,7 +89,7 @@ export function Gate({ onUnlock }: GateProps) {
     if (status !== 'idle') return
     const text = event.clipboardData
       .getData('text')
-      .replace(/[^a-z]/gi, '')
+      .replace(/[^a-z0-9]/gi, '')
       .toUpperCase()
       .slice(0, PASSCODE.length)
     if (!text) return
@@ -95,19 +104,19 @@ export function Gate({ onUnlock }: GateProps) {
     <main className="flex min-h-dvh items-center justify-center px-4 py-12">
       <div className="gate-frame w-full max-w-xl px-6 py-10 text-center sm:px-12 sm:py-14">
         <WaxSeal
-          className={`mx-auto size-20 drop-shadow-[0_6px_18px_rgba(138,48,64,0.45)] sm:size-24 ${
+          className={`mx-auto size-20 drop-shadow-[0_6px_18px_rgba(143,76,92,0.4)] sm:size-24 ${
             status === 'opening' ? 'animate-seal-break' : ''
           }`}
         />
 
-        <p className="mt-8 text-[0.7rem] font-medium tracking-[0.35em] text-gold-500 uppercase">
+        <p className="mt-8 text-[0.7rem] tracking-[0.35em] text-rose-400">
           26 September — 26 October 2026
         </p>
-        <h1 className="font-display mt-3 text-4xl font-medium text-ivory-100 sm:text-5xl">
+        <h1 className="font-display mt-3 text-4xl font-medium text-ink-100 sm:text-5xl">
           The Midnight Calendar
         </h1>
 
-        <p className="mx-auto mt-6 max-w-md border-y border-gold-500/25 py-4 text-sm leading-relaxed font-semibold text-ivory-300 sm:text-base">
+        <p className="mx-auto mt-6 max-w-md border-y border-rose-300/50 py-4 font-display text-lg leading-relaxed text-ink-500 italic sm:text-xl">
           {GATE_HINT}
         </p>
 
@@ -149,7 +158,7 @@ export function Gate({ onUnlock }: GateProps) {
           </div>
 
           <p
-            className={`mt-6 text-sm text-rose-300 transition-opacity duration-300 ${
+            className={`mt-6 text-sm text-rose-600 transition-opacity duration-300 ${
               status === 'wrong' ? 'opacity-100' : 'opacity-0'
             }`}
             role="alert"
@@ -158,7 +167,7 @@ export function Gate({ onUnlock }: GateProps) {
           </p>
         </form>
 
-        <p className="mt-2 text-xs tracking-wide text-ivory-600 italic">
+        <p className="mt-2 text-xs tracking-wide text-ink-600 italic">
           {status === 'opening'
             ? 'The seal breaks…'
             : 'Speak the phrase, and the calendar opens.'}

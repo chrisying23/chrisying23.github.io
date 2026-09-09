@@ -58,3 +58,55 @@ export function prettyDate(dateStr: string): string {
     year: 'numeric',
   })
 }
+
+/**
+ * Convert an admin-override date + time (interpreted as a Hong Kong wall
+ * clock reading, e.g. '2026-10-04' + '13:30') into a UTC epoch value that
+ * can stand in for `Date.now()` everywhere else. Minutes '07:30' are fine.
+ */
+export function hkWallClockToUtcMs(datePart: string, timePart: string): number | null {
+  const [y, m, d] = datePart.split('-').map(Number)
+  const clock = timePart.split(':').map(Number)
+  if ([y, m, d, ...clock].some((n) => !Number.isFinite(n))) return null
+  const hour = clock[0] ?? 0
+  const minute = clock[1] ?? 0
+  return Date.UTC(y, m - 1, d, hour, minute) - HK_OFFSET_MS
+}
+
+/** Format epoch ms as a Hong Kong date/time line for the admin banner. */
+export function prettyHkDateTime(nowMs: number): string {
+  return new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Hong_Kong',
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(nowMs))
+}
+
+/**
+ * Show the current Hong Kong time under the same format the admin picker
+ * expects (`YYYY-MM-DD`, `HH:MM`) pre-filled from a real clock reading.
+ */
+export function hkParts(
+  nowMs: number,
+): { date: string; time: string } {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Hong_Kong',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).formatToParts(new Date(nowMs))
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? ''
+  const hour = get('hour') === '24' ? '00' : get('hour')
+  return {
+    date: `${get('year')}-${get('month')}-${get('day')}`,
+    time: `${hour}:${get('minute')}`,
+  }
+}
