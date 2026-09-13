@@ -1,7 +1,8 @@
 import { useAdmin } from '../lib/admin'
+import { SITE_NAME } from '../lib/config'
 import { formatCountdown, msUntilNextHkMidnight } from '../lib/time'
 import { useNow } from '../lib/useNow'
-import { WaxSeal } from './Icons'
+import { HeartIcon } from './Icons'
 
 export type NavView = 'calendar' | 'about'
 
@@ -21,9 +22,9 @@ export function NavBar({ view, onNavigate }: NavBarProps) {
     <header className="sticky top-0 z-40 border-b border-mauve-800/25 bg-mauve-300/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-3 sm:px-6">
         <div className="flex items-center gap-2.5">
-          <WaxSeal className="size-8" />
-          <span className="font-display text-xl font-medium text-ink-100">
-            The Midnight Calendar
+          <HeartIcon className="size-7 text-rose-600 drop-shadow-[0_2px_8px_rgba(143,76,92,0.45)]" />
+          <span className="font-display text-lg font-medium text-ink-100 sm:text-xl">
+            {SITE_NAME}
           </span>
         </div>
 

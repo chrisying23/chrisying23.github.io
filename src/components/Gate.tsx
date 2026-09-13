@@ -1,7 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ClipboardEvent, KeyboardEvent } from 'react'
-import { ADMIN_PASSCODE, GATE_HINT, PASSCODE, PASSCODE_GAP_AFTER } from '../lib/config'
+import {
+  ADMIN_PASSCODE,
+  GATE_HINT,
+  PASSCODE,
+  PASSCODE_GAP_AFTER,
+  SITE_NAME,
+} from '../lib/config'
 import { WaxSeal } from './Icons'
+
+/** The passcode split into whole words (NOONDAY | GUN) for the box grid. */
+const PASSCODE_WORDS = [
+  PASSCODE.slice(0, PASSCODE_GAP_AFTER),
+  PASSCODE.slice(PASSCODE_GAP_AFTER),
+]
 
 type GateProps = {
   /** Visitor unlock: show the calendar. */
@@ -112,8 +124,8 @@ export function Gate({ onUnlock, onAdmin }: GateProps) {
         <p className="mt-8 text-[0.7rem] tracking-[0.35em] text-rose-400">
           26 September — 26 October 2026
         </p>
-        <h1 className="font-display mt-3 text-4xl font-medium text-ink-100 sm:text-5xl">
-          The Midnight Calendar
+        <h1 className="font-display mt-3 text-3xl font-medium text-ink-100 sm:text-4xl">
+          {SITE_NAME}
         </h1>
 
         <p className="mx-auto mt-6 max-w-md border-y border-rose-300/50 py-4 font-display text-lg leading-relaxed text-ink-500 italic sm:text-xl">
@@ -125,36 +137,47 @@ export function Gate({ onUnlock, onAdmin }: GateProps) {
           onSubmit={(event) => event.preventDefault()}
           aria-label="Passcode"
         >
+          {/*
+            The boxes are grouped by word: each word is a non-wrapping flex
+            row, and only the gap BETWEEN words may wrap. A word is therefore
+            never split across two lines.
+          */}
           <div
-            className={`flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 ${
+            className={`flex flex-wrap items-center justify-center gap-x-6 gap-y-3 ${
               status === 'wrong' ? 'animate-shake' : ''
             }`}
           >
-            {letters.map((letter, index) => (
-              <div key={index} className="contents">
-                {index === PASSCODE_GAP_AFTER && (
-                  <span className="h-0 w-full sm:h-auto sm:w-3" aria-hidden="true" />
-                )}
-                <input
-                  ref={(el) => {
-                    inputsRef.current[index] = el
-                  }}
-                  type="text"
-                  inputMode="text"
-                  autoComplete="off"
-                  autoCapitalize="characters"
-                  spellCheck={false}
-                  maxLength={1}
-                  value={letter}
-                  disabled={status === 'opening'}
-                  aria-label={`Letter ${index + 1} of ${PASSCODE.length}`}
-                  onChange={(event) => handleChange(index, event.target.value)}
-                  onKeyDown={(event) => handleKeyDown(index, event)}
-                  onPaste={handlePaste}
-                  className={`letter-box ${status === 'wrong' ? 'letter-box-wrong' : ''}`}
-                />
-              </div>
-            ))}
+            {PASSCODE_WORDS.map((word, wordIndex) => {
+              const offset = wordIndex === 0 ? 0 : PASSCODE_WORDS[0].length
+              return (
+                <div key={wordIndex} className="flex gap-2 sm:gap-2.5">
+                  {word.split('').map((_, letterIndex) => {
+                    const index = offset + letterIndex
+                    return (
+                      <input
+                        key={index}
+                        ref={(el) => {
+                          inputsRef.current[index] = el
+                        }}
+                        type="text"
+                        inputMode="text"
+                        autoComplete="off"
+                        autoCapitalize="characters"
+                        spellCheck={false}
+                        maxLength={1}
+                        value={letters[index]}
+                        disabled={status === 'opening'}
+                        aria-label={`Letter ${index + 1} of ${PASSCODE.length}`}
+                        onChange={(event) => handleChange(index, event.target.value)}
+                        onKeyDown={(event) => handleKeyDown(index, event)}
+                        onPaste={handlePaste}
+                        className={`letter-box ${status === 'wrong' ? 'letter-box-wrong' : ''}`}
+                      />
+                    )
+                  })}
+                </div>
+              )
+            })}
           </div>
 
           <p

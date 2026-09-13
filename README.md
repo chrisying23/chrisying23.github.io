@@ -1,9 +1,9 @@
-# The Midnight Calendar
+# YanYan's Surprise Birthday Calendar
 
 A private, romantic birthday surprise: a passcode-gated calendar that unlocks a
 new photo every day at midnight (Hong Kong time) from **26 September to
-26 October 2026**, with a mini-game surprise every Saturday — and on the final
-night.
+26 October 2026**, with a mini-game surprise on five special evenings — every
+Saturday in October, and the final night.
 
 ## Stack
 
@@ -54,24 +54,35 @@ subpath. No other configuration is needed.
   open on their own at midnight even if the page is left open.
 - **Calendar** — `src/components/Calendar.tsx`. The surprise period and
   the months shown are configured in `src/lib/config.ts` (`START_DATE`,
-  `END_DATE`, `CALENDAR_MONTHS`). Saturdays inside the period plus the
-  final day get a mini-game icon (`hasMiniGame`).
+  `END_DATE`, `CALENDAR_MONTHS`). The five mini-game days are listed in
+  `GAME_DATES` (`hasMiniGame`); note that 26 September is a photo-only day.
+- **Daily comic pages** — each day's photo icon opens the next two pages of
+  the comic *Muiju: The Rise of the Household Empress*
+  (`comic/muiju-household-empress/`), imported via `import.meta.glob` in
+  `src/lib/config.ts` and mapped automatically: 26 September shows the
+  cover followed by pages 1–2, and every later day the next two pages,
+  ending with pages 61–62 on 26 October.
+- **Mini-games** — one component per day in `src/components/games/`, routed
+  by date in `src/components/MiniGame.tsx`:
+  - `2026-10-03` — **Wordle** (`WordleGame.tsx`), a faithful dark-theme
+    clone of the official game with unlimited tries. Answer, hint and win
+    message: `WORDLE_*` in `src/lib/config.ts`.
+  - `2026-10-10` — **Photo reveal** (`PhotoGame.tsx`), a hinted photograph
+    (the shared placeholder for now). Hint: `PHOTO_GAME_HINT`.
+  - `2026-10-17` — **Hangman** (`HangmanGame.tsx`), full clickable
+    alphabet. Answer/hint/win: `HANGMAN_*`.
+  - `2026-10-24` — **Scramble** (`ScrambleGame.tsx`), drag-and-drop (or
+    tap) the scrambled letters into place. Answer/win: `SCRAMBLE_*`.
+  - `2026-10-26` — **Cryptic finale** (`CrypticGame.tsx`), the same
+    letter-box grid as the gate. Clue/answer/win: `FINALE_*`.
+  The only contract a game must honour is calling `onWin()` when the player
+  wins, which persists the win and keeps the celebration visible on later
+  visits.
 
 ## Swapping in the real content
 
-All of these places are marked with comments in the code:
-
-1. **Daily photos** — until bespoke entries are added, every day opens the
-   shared `public/photos/placeholder.jpg` (see `PHOTO_FALLBACK` and
-   `PHOTO_FALLBACK_CAPTION` in `src/lib/config.ts`). When the real photos
-   are ready, drop image files in `public/photos/` and add one entry per
-   day to `PHOTOS`, e.g. `'2026-09-26': './photos/2026-09-26.jpg'`
-   (keep paths relative with a leading `./` so GitHub Pages project URLs
-   keep working).
-2. **Mini-game secrets** — fill in `SECRETS` in `src/lib/config.ts`, keyed
-   by date. Mini-game days: `2026-09-26`, `2026-10-03`, `2026-10-10`,
-   `2026-10-17`, `2026-10-24`, `2026-10-26`.
-3. **Mini-games** — `src/components/MiniGame.tsx` has a clearly marked
-   placeholder panel. Replace it with the real game; the only contract is
-   to call `handleWin()` when the player wins, which persists the win and
-   reveals the day's secret.
+**Daily photos** — the daily reveals are the comic pages described above;
+no placeholder is shown anymore. Only the 10 October mini-game
+(`PhotoGame.tsx`) still uses the shared `public/photos/placeholder.jpg`
+(`PHOTO_FALLBACK` in `src/lib/config.ts`) — replace that file (or point the
+constant elsewhere) when the real mystery-place photo is ready.

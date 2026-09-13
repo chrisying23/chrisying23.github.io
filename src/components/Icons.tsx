@@ -70,6 +70,15 @@ export function LockIcon({ className }: IconProps) {
   )
 }
 
+/** Solid heart — the site logo. */
+export function HeartIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M12 20.7C6.6 16.6 2.5 13.2 2.5 9.2c0-2.9 2.3-5.1 5.1-5.1 1.7 0 3.3.9 4.4 2.4 1.1-1.5 2.7-2.4 4.4-2.4 2.8 0 5.1 2.2 5.1 5.1 0 4-4.1 7.4-9.5 11.5Z" />
+    </svg>
+  )
+}
+
 /** Decorative damask wax seal with an embossed heart. */
 export function WaxSeal({ className }: IconProps) {
   return (

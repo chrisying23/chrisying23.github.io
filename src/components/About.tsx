@@ -1,4 +1,4 @@
-import { UNLOCK_KEY, WINS_KEY } from '../lib/config'
+import { COMIC_COVER, UNLOCK_KEY, WINS_KEY } from '../lib/config'
 import { WaxSeal } from './Icons'
 
 /** Warm, short explanation of what this whole experience is. */
@@ -18,15 +18,34 @@ export function About() {
             This little corner of the internet was built for you and you alone.
             From <em>26 September to 26 October 2026</em>, it becomes a small
             ceremony we keep together: every day at midnight a new photograph
-            unlocks — one for each of the thirty-one days — and every Saturday a
-            little game appears with a secret hidden inside, waiting for you to
-            win it. The final night holds the last surprise of all.
+            unlocks — one for each of the thirty-one days — and on five very
+            special evenings a little game appears with a secret hidden inside,
+            waiting for you to win it. The final night holds the last surprise
+            of all.
           </p>
           <p>
             Come back each morning. Something new will always be waiting for you
             here.
           </p>
           <p className="text-right text-rose-400 italic">— yours, entirely</p>
+        </div>
+
+        {/* ── The comic ── */}
+        <div className="mt-10 border-t border-mauve-800/15 pt-8 text-center">
+          <h2 className="font-display text-2xl font-medium text-ink-100 sm:text-3xl">
+            Muiju: The Rise of the Household Empress
+          </h2>
+          <p className="font-display mx-auto mt-4 max-w-md text-lg leading-relaxed text-ink-500">
+            A comic made for you, revealed two pages a day with your morning
+            surprise — the series ending on the last day.
+          </p>
+          <div className="photo-frame mx-auto mt-6 max-w-xs">
+            <img
+              src={COMIC_COVER}
+              alt="Cover of the comic — Muiju: The Rise of the Household Empress"
+              className="block w-full"
+            />
+          </div>
         </div>
 
         <div className="mt-10 border-t border-mauve-800/15 pt-6 text-center">
@@ -43,7 +62,7 @@ export function About() {
             }}
             className="text-xs text-ink-600 underline decoration-ink-600/40 underline-offset-4 transition-colors hover:text-ink-500"
           >
-            Reset access and mini-game wins (site owner’s testing tool)
+            Reset access and mini-game wins
           </button>
         </div>
       </div>

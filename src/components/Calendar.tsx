@@ -42,18 +42,20 @@ export function Calendar({ onOpenPhoto, onOpenGame }: CalendarProps) {
           A month of small ceremonies
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ink-500 sm:text-base">
-          Every day at midnight, Hong Kong time, a new photograph unlocks. Every
-          Saturday — and on the final night — a small game arrives with a secret
-          hidden inside.
+          Every day at midnight, Hong Kong time, two more pages of the comic
+          are revealed. On five special evenings — every Saturday in October,
+          and the final night — a small game arrives with a secret hidden
+          inside.
         </p>
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-xs text-ink-500">
           <span className="flex items-center gap-2">
-            <PhotoIcon className="size-4 text-gold-400" /> a photo, every day
+            <PhotoIcon className="size-4 text-gold-400" /> two comic pages,
+            every day
           </span>
           <span className="flex items-center gap-2">
             <BlastIcon className="size-4 text-rose-400" /> a game, every Saturday
-            and on the final night
+            in October and on the final night
           </span>
         </div>
       </header>
@@ -157,8 +159,8 @@ function DayCell({ dateStr, now, onOpenPhoto, onOpenGame }: DayCellProps) {
           type="button"
           disabled={!open}
           onClick={() => onOpenPhoto(dateStr)}
-          title={open ? 'Open this day’s photo' : lockHint}
-          aria-label={`Photo for ${dateStr}${open ? '' : ` — ${lockHint}`}`}
+          title={open ? 'Open this day’s comic pages' : lockHint}
+          aria-label={`Comic pages for ${dateStr}${open ? '' : ` — ${lockHint}`}`}
           className="icon-btn text-gold-400"
         >
           <PhotoIcon className="size-4.5" />

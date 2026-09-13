@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────────────────
-   The Midnight Calendar — design tokens
+   YanYan's Surprise Birthday Calendar — design tokens
    Palette: greyish-pink mauve, blush rose, bistre ink, and a whisper of
    antique gold. Type: Cormorant Garamond (voice) + Inter (utility).
    ───────────────────────────────────────────────────────────────────── */
@@ -9,6 +9,7 @@
 @theme {
   --font-display: "Cormorant Garamond", "Times New Roman", Georgia, serif;
   --font-ui: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-wordle: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   /* Greyish-pink panel/field tones, lightest to deepest. */
   --color-mauve-100: #f6eef1;
@@ -31,6 +32,15 @@
   --color-gold-200: #b5986e;
   --color-gold-400: #9d8560;
   --color-gold-600: #7d684a;
+
+  /* Wordle mini-game — the official game's dark-theme palette. */
+  --color-wordle-bg: #121213;
+  --color-wordle-correct: #538d4e;
+  --color-wordle-present: #b59f3b;
+  --color-wordle-absent: #3a3a3c;
+  --color-wordle-key: #818384;
+  --color-wordle-border: #3a3a3c;
+  --color-wordle-border-filled: #565758;
 
   --animate-shake: shake 0.5s ease-in-out;
   --animate-seal-break: seal-break 1.1s cubic-bezier(0.5, 0, 0.8, 0.4) forwards;
@@ -144,8 +154,9 @@ body {
 }
 
 .letter-box {
-  width: 2.35rem;
-  height: 3rem;
+  /* Fluid sizing keeps a full 7-box word on one line, even on narrow phones. */
+  width: clamp(1.75rem, 8.5vw, 2.35rem);
+  height: clamp(2.4rem, 11vw, 3rem);
   border: 1px solid rgba(141, 109, 116, 0.4);
   border-bottom-width: 2px;
   border-radius: 0.4rem;
@@ -153,7 +164,7 @@ body {
   box-shadow: inset 0 2px 8px rgba(87, 72, 78, 0.18);
   color: var(--color-ink-100);
   font-family: var(--font-display);
-  font-size: 1.45rem;
+  font-size: clamp(1.1rem, 5vw, 1.45rem);
   font-weight: 600;
   text-align: center;
   text-transform: uppercase;
@@ -346,6 +357,160 @@ body {
   box-shadow:
     inset 0 1px 4px rgba(87, 72, 78, 0.15),
     0 0 0 3px rgba(184, 106, 124, 0.25);
+}
+
+/* ── Wordle mini-game (mimics the official game's dark theme) ───────── */
+
+.wordle-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px solid var(--color-wordle-border);
+  color: #ffffff;
+  font-family: var(--font-wordle);
+  font-size: clamp(1.15rem, 5.5vw, 1.65rem);
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* A letter typed but not yet submitted. */
+.wordle-tile-filled {
+  border-color: var(--color-wordle-border-filled);
+  animation: wordle-pop 120ms ease-in-out;
+}
+
+/*
+ * A submitted tile. The final colour lives in `--tile-bg` (set inline per
+ * tile); the flip keyframes keep the tile plain for the first half of the
+ * turn, then swap the colour in as it rotates — the official game's reveal.
+ */
+.wordle-tile-reveal {
+  animation: wordle-flip 550ms ease both;
+  background-color: var(--tile-bg);
+  border-color: var(--tile-bg);
+}
+
+@keyframes wordle-pop {
+  0% {
+    transform: scale(0.85);
+  }
+  55% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes wordle-flip {
+  0% {
+    transform: rotateX(0deg);
+    background-color: transparent;
+    border-color: var(--color-wordle-border-filled);
+  }
+  45% {
+    transform: rotateX(-90deg);
+    background-color: transparent;
+    border-color: var(--color-wordle-border-filled);
+  }
+  55% {
+    transform: rotateX(-90deg);
+    background-color: var(--tile-bg);
+    border-color: var(--tile-bg);
+  }
+  100% {
+    transform: rotateX(0deg);
+    background-color: var(--tile-bg);
+    border-color: var(--tile-bg);
+  }
+}
+
+.wordle-key {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  max-width: 3rem;
+  height: 3.5rem;
+  border-radius: 0.25rem;
+  background: var(--color-wordle-key);
+  color: #ffffff;
+  font-family: var(--font-wordle);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color 150ms ease,
+    transform 80ms ease;
+}
+
+.wordle-key-wide {
+  max-width: 4.4rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+}
+
+.wordle-key-correct {
+  background: var(--color-wordle-correct);
+}
+
+.wordle-key-present {
+  background: var(--color-wordle-present);
+}
+
+.wordle-key-absent {
+  background: var(--color-wordle-absent);
+}
+
+.wordle-key:hover {
+  filter: brightness(1.08);
+}
+
+.wordle-key:active {
+  transform: scale(0.95);
+}
+
+/* Toast message near the top of the Wordle page (e.g. "Not enough letters"). */
+.wordle-toast {
+  position: fixed;
+  top: 12%;
+  left: 50%;
+  z-index: 20;
+  transform: translateX(-50%);
+  border-radius: 0.25rem;
+  background: #ffffff;
+  color: var(--color-wordle-bg);
+  padding: 0.7rem 1rem;
+  font-family: var(--font-wordle);
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Shared mini-game bits ──────────────────────────────────────────── */
+
+/* Empty slot in the Scramble letter pool (tile currently placed above). */
+.box-slot-empty {
+  border-style: dashed;
+  border-color: rgba(141, 109, 116, 0.3);
+  background: transparent;
+  box-shadow: none;
+}
+
+/* A Scramble tile that is tapped/selected, waiting for a target box. */
+.game-tile-selected {
+  border-color: var(--color-rose-400);
+  box-shadow:
+    0 0 0 3px rgba(184, 106, 124, 0.3),
+    0 12px 26px -12px rgba(184, 106, 124, 0.7);
+  transform: translateY(-2px);
 }
 
 /* ── Accessibility & motion ─────────────────────────────────────────── */
