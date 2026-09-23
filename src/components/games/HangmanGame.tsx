@@ -95,9 +95,13 @@ export function HangmanGame({ onWin }: HangmanGameProps) {
           {HANGMAN_HINT}
         </p>
 
-        {/* ── The word, one box per letter (letters only appear when guessed) ── */}
+        {/*
+          ── The word, one box per letter (letters only appear when guessed) ──
+          flex-nowrap + the compact letter-boxes keep RACINES on a single
+          line even beside the gallows; they must never wrap onto two lines.
+        */}
         <div
-          className="mt-10 flex flex-wrap items-center justify-center gap-2"
+          className="mt-10 flex flex-nowrap items-center justify-center gap-1.5 sm:gap-2"
           role="group"
           aria-label="The word to guess"
         >
@@ -107,7 +111,7 @@ export function HangmanGame({ onWin }: HangmanGameProps) {
               <span
                 key={index}
                 aria-label={revealed ? `Letter ${letter}` : 'Hidden letter'}
-                className={`letter-box flex items-center justify-center ${
+                className={`letter-box letter-box-sm flex items-center justify-center ${
                   revealed ? 'border-gold-400/70 bg-white/60' : ''
                 }`}
               >

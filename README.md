@@ -67,12 +67,14 @@ subpath. No other configuration is needed.
   - `2026-10-03` — **Wordle** (`WordleGame.tsx`), a faithful dark-theme
     clone of the official game with unlimited tries. Answer, hint and win
     message: `WORDLE_*` in `src/lib/config.ts`.
-  - `2026-10-10` — **Photo reveal** (`PhotoGame.tsx`), a hinted photograph
-    (the shared placeholder for now). Hint: `PHOTO_GAME_HINT`.
+  - `2026-10-10` — **Emoji guess** (`EmojiGame.tsx`), decode two emoji
+    clusters (Bruno Fernandes → BRUNO, planet + rocket → MARS) and type
+    the answer into the letter boxes. Answer/win: `EMOJI_*`.
   - `2026-10-17` — **Hangman** (`HangmanGame.tsx`), full clickable
     alphabet. Answer/hint/win: `HANGMAN_*`.
-  - `2026-10-24` — **Scramble** (`ScrambleGame.tsx`), drag-and-drop (or
-    tap) the scrambled letters into place. Answer/win: `SCRAMBLE_*`.
+  - `2026-10-24` — **Photo reveal** (`PhotoGame.tsx`), a hinted
+    photograph (`public/photos/location.jpg`, `LOCATION_PHOTO`). Hint:
+    `PHOTO_GAME_HINT`.
   - `2026-10-26` — **Cryptic finale** (`CrypticGame.tsx`), the same
     letter-box grid as the gate. Clue/answer/win: `FINALE_*`.
   The only contract a game must honour is calling `onWin()` when the player
@@ -82,7 +84,6 @@ subpath. No other configuration is needed.
 ## Swapping in the real content
 
 **Daily photos** — the daily reveals are the comic pages described above;
-no placeholder is shown anymore. Only the 10 October mini-game
-(`PhotoGame.tsx`) still uses the shared `public/photos/placeholder.jpg`
-(`PHOTO_FALLBACK` in `src/lib/config.ts`) — replace that file (or point the
-constant elsewhere) when the real mystery-place photo is ready.
+no placeholder is shown anymore. The 24 October mini-game (`PhotoGame.tsx`)
+shows `public/photos/location.jpg` (`LOCATION_PHOTO` in `src/lib/config.ts`)
+— swap that file (or point the constant elsewhere) to change the photo.

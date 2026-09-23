@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import {
+  EMOJI_GAME_DATE,
   END_DATE,
   HANGMAN_DATE,
   PHOTO_GAME_DATE,
-  SCRAMBLE_DATE,
   WORDLE_DATE,
   loadWins,
   saveWin,
@@ -11,9 +11,9 @@ import {
 import { prettyDate } from '../lib/time'
 import { BlastIcon } from './Icons'
 import { CrypticGame } from './games/CrypticGame'
+import { EmojiGame } from './games/EmojiGame'
 import { HangmanGame } from './games/HangmanGame'
 import { PhotoGame } from './games/PhotoGame'
-import { ScrambleGame } from './games/ScrambleGame'
 import { WordleGame } from './games/WordleGame'
 
 type MiniGameProps = {
@@ -44,9 +44,9 @@ export function MiniGame({ dateStr, onBack }: MiniGameProps) {
   }
 
   const knownGame =
+    dateStr === EMOJI_GAME_DATE ||
     dateStr === PHOTO_GAME_DATE ||
     dateStr === HANGMAN_DATE ||
-    dateStr === SCRAMBLE_DATE ||
     isFinale
 
   return (
@@ -69,9 +69,9 @@ export function MiniGame({ dateStr, onBack }: MiniGameProps) {
       </header>
 
       <div className="mt-10">
+        {dateStr === EMOJI_GAME_DATE && <EmojiGame onWin={handleWin} />}
         {dateStr === PHOTO_GAME_DATE && <PhotoGame dateStr={dateStr} />}
         {dateStr === HANGMAN_DATE && <HangmanGame onWin={handleWin} />}
-        {dateStr === SCRAMBLE_DATE && <ScrambleGame won={won} onWin={handleWin} />}
         {isFinale && <CrypticGame won={won} onWin={handleWin} />}
 
         {/* Safety net — unreachable while GAME_DATES and the routing agree. */}

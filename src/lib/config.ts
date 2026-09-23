@@ -44,8 +44,8 @@ export const CALENDAR_MONTHS: ReadonlyArray<readonly [number, number]> = [
   [2026, 9], // October 2026
 ]
 
-/** Mystery-place photo of the 10 October mini-game (placeholder for now). */
-export const PHOTO_FALLBACK = './photos/placeholder.jpg'
+/** The photograph revealed by the 24 October mini-game. */
+export const LOCATION_PHOTO = './photos/location.jpg'
 
 /** ── Daily comic pages ─────────────────────────────────────────────── */
 
@@ -95,8 +95,8 @@ export const PHOTOS: Record<string, string[]> = (() => {
 /**
  * Mini-game days, in order. Each date maps to a game component in
  * `src/components/games/` (see src/components/MiniGame.tsx for the routing):
- *   2026-10-03 — Wordle        2026-10-17 — Hangman
- *   2026-10-10 — photo reveal  2026-10-24 — Scramble
+ *   2026-10-03 — Wordle          2026-10-17 — Hangman
+ *   2026-10-10 — emoji guessing  2026-10-24 — photo reveal
  *   2026-10-26 — cryptic puzzle (the finale)
  * Note: 26 September (the first day) is a photo-only day — no game.
  */
@@ -121,10 +121,12 @@ export const WORDLE_ANSWER = 'WINECAB'
 export const WORDLE_HINT = 'Your first present is located in the...'
 export const WORDLE_WIN = 'Now go look for your present!'
 
-/** 10 October — photo reveal (no win condition, just the hint + photo). */
-export const PHOTO_GAME_DATE = '2026-10-10'
-export const PHOTO_GAME_HINT =
-  'Do you know where is this? Your next present is placed here.'
+/** 10 October — emoji word guess (BRUNO | MARS). */
+export const EMOJI_GAME_DATE = '2026-10-10'
+export const EMOJI_ANSWER = 'BRUNOMARS'
+/** Number of letters before the visual gap (BRUNO | MARS). */
+export const EMOJI_GAP_AFTER = 5
+export const EMOJI_WIN = 'We are going to see the Bruno Mars Concert on 7th of May 2027.'
 
 /** 17 October — Hangman. */
 export const HANGMAN_DATE = '2026-10-17'
@@ -132,13 +134,10 @@ export const HANGMAN_ANSWER = 'RACINES'
 export const HANGMAN_HINT = 'We are going for lunch today at this restaurant.'
 export const HANGMAN_WIN = 'See you at Racines for lunch!'
 
-/** 24 October — Scramble (SOUTH | KOREA). */
-export const SCRAMBLE_DATE = '2026-10-24'
-export const SCRAMBLE_ANSWER = 'SOUTHKOREA'
-/** Number of letters before the visual gap (SOUTH | KOREA). */
-export const SCRAMBLE_GAP_AFTER = 5
-export const SCRAMBLE_WIN =
-  'Your hubby will sponsor your flights to this country for a vacation!'
+/** 24 October — photo reveal (no win condition, just the hint + photo). */
+export const PHOTO_GAME_DATE = '2026-10-24'
+export const PHOTO_GAME_HINT =
+  'Do you know where is this? Your next present is placed here.'
 
 /** 26 October — the finale cryptic puzzle (GLOVE | BOX). */
 export const FINALE_CLUE = 'Fighting Mitts in Car Compartment'

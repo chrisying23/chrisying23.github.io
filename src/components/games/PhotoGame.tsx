@@ -1,4 +1,4 @@
-import { PHOTO_FALLBACK, PHOTO_GAME_HINT } from '../../lib/config'
+import { LOCATION_PHOTO, PHOTO_GAME_HINT } from '../../lib/config'
 import { prettyDate } from '../../lib/time'
 
 type PhotoGameProps = {
@@ -6,8 +6,8 @@ type PhotoGameProps = {
 }
 
 /**
- * 10 October — a photo reveal. No win condition: the day simply shows the
- * photograph (the shared placeholder for now) with its hint above.
+ * 24 October — a photo reveal. No win condition: the day simply shows the
+ * photograph with its hint above.
  */
 export function PhotoGame({ dateStr }: PhotoGameProps) {
   return (
@@ -18,7 +18,7 @@ export function PhotoGame({ dateStr }: PhotoGameProps) {
 
       <div className="photo-frame mx-auto mt-8 max-w-sm">
         <img
-          src={PHOTO_FALLBACK}
+          src={LOCATION_PHOTO}
           alt={`A mystery place for ${prettyDate(dateStr)}`}
           className="block aspect-[4/5] w-full object-cover"
         />
